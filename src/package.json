@@ -1,0 +1,21 @@
+{
+  "name": "a-vscode-extension",
+  "displayName": "VSCode Extension",
+  "description": "A VSCode extension.",
+  "version": "0.0.1",
+  "activationEvents": [],
+  "categories": ["Other"],
+  "contributes": {
+    "commands": [
+      {
+        "command": "a-vscode-extension.Test",
+        "title": "!!! This is a test."
+      }
+    ]
+  },
+  "engines": {
+    "vscode": "^1.93.0"
+  },
+  "main": "./extension.module.js",
+  "type": "commonjs"
+}
