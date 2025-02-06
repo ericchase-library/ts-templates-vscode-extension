@@ -3,6 +3,7 @@
   "displayName": "VSCode Extension",
   "description": "A VSCode extension.",
   "version": "0.0.1",
+  "repository": {},
   "activationEvents": [],
   "categories": ["Other"],
   "contributes": {

@@ -1,5 +1,45 @@
 import { SplitLines } from '../Utility/String.js';
 
+export class U8Group {
+  arrays = new Array<Uint8Array>();
+  byteLength = 0;
+  add(bytes: Uint8Array) {
+    this.arrays.push(bytes);
+    this.byteLength += bytes.byteLength;
+    return this.byteLength;
+  }
+  get(count: number, offset = 0): Uint8Array {
+    const out = new Uint8Array(count);
+    let i_out = 0;
+    if (offset === 0) {
+      for (const bytes of this.arrays) {
+        for (let i_bytes = 0; i_bytes < bytes.byteLength; i_bytes++) {
+          out[i_out] = bytes[i_bytes];
+          i_out++;
+          if (i_out >= count) {
+            return out;
+          }
+        }
+      }
+    } else {
+      let i_total = 0;
+      for (const bytes of this.arrays) {
+        for (let i_bytes = 0; i_bytes < bytes.byteLength; i_bytes++) {
+          i_total++;
+          if (i_total >= offset) {
+            out[i_out] = bytes[i_bytes];
+            i_out++;
+            if (i_out >= count) {
+              return out;
+            }
+          }
+        }
+      }
+    }
+    return out;
+  }
+}
+
 export function U8(from: ArrayLike<number> = []): Uint8Array {
   return Uint8Array.from(from);
 }

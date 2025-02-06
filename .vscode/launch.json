@@ -6,7 +6,7 @@
       "type": "extensionHost",
       "request": "launch",
       "args": [
-        "--extensionDevelopmentPath=${workspaceFolder}/build", //
+        "--extensionDevelopmentPath=${workspaceFolder}/out", //
         "--disable-extensions"
       ],
       "outFiles": [

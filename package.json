@@ -1,24 +1,19 @@
 {
   "dependencies": {},
   "devDependencies": {
-    "@biomejs/biome": "^1.9.3",
-    "@types/bun": "^1.1.10",
-    "@types/chrome": "^0.0.271",
-    "@types/node": "^20.16.10",
-    "@types/vscode": "^1.94.0",
-    "node-html-parser": "^6.1.13",
-    "prettier": "^3.3.3",
-    "rollup": "4.22.5",
-    "vsce": "^2.15.0"
+    "@biomejs/biome": "^1.9.4",
+    "@types/bun": "^1.2.2",
+    "@types/chrome": "^0.0.301",
+    "@types/node": "^20.17.17",
+    "@types/vscode": "^1.96.0",
+    "@vscode/vsce": "^3.2.2",
+    "node-html-parser": "^7.0.1",
+    "prettier": "^3.4.2",
+    "rollup": "4.22.5"
   },
   "scripts": {
-    "archive": "bun tools/dev.ts archive",
-    "build": "bun tools/dev.ts build",
-    "dev": "bun tools/dev.ts",
-    "format": "bun tools/dev.ts format",
-    "lint": "biome lint --error-on-warnings --write .",
-    "package": "bun tools/dev.ts archive",
-    "watch": "bun tools/dev.ts watch",
-    "zip": "bun tools/dev.ts archive"
+    "build": "bun tools/build.ts",
+    "format": "bun tools/scripts/format.ts",
+    "lint": "biome lint --error-on-warnings --write ."
   }
 }

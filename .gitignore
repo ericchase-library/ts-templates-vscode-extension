@@ -160,10 +160,6 @@ dist-ssr
 *.mkv
 *.mp4
 
-# don't share vscode settings unless you know for sure they should be shared
-# ! we need to share the folder for this project
-# .vscode/
-
 # build folders
 # build/
 # out/
