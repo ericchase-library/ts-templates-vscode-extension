@@ -2,18 +2,23 @@
   "dependencies": {},
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
-    "@types/bun": "^1.2.2",
-    "@types/chrome": "^0.0.301",
-    "@types/node": "^20.17.17",
-    "@types/vscode": "^1.96.0",
-    "@vscode/vsce": "^3.2.2",
+    "@types/adm-zip": "^0.5.7",
+    "@types/bun": "^1.2.5",
+    "@types/chrome": "^0.0.310",
+    "@types/node": "^22.13.13",
+    "@types/vscode": "^1.98.0",
+    "@vscode/vsce": "^3.3.0",
+    "adm-zip": "^0.5.16",
     "node-html-parser": "^7.0.1",
-    "prettier": "^3.4.2",
-    "rollup": "4.22.5"
+    "prettier": "^3.5.3",
+    "rollup": "4.37.0",
+    "xxhash-wasm": "^1.1.0"
   },
   "scripts": {
-    "build": "bun tools/build.ts",
-    "format": "bun tools/scripts/format.ts",
-    "lint": "biome lint --error-on-warnings --write ."
-  }
+    "build": "bun run tools/build.ts",
+    "dev": "bun run tools/build.ts --watch",
+    "lint": "biome lint --error-on-warnings --write",
+    "pull": "bun run tools/pull.ts"
+  },
+  "type": "module"
 }

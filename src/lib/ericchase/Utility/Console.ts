@@ -1,38 +1,53 @@
-import { UpdateMarkerManager } from './UpdateMarker.js';
-
-const marker_manager = new UpdateMarkerManager();
 let newline_count = 0;
-
-export function GetConsoleMarker() {
-  return marker_manager.getNewMarker();
-}
 
 export function ConsoleError(...items: any[]) {
   // biome-ignore lint: this let's us search for undesired console[error]s
   console['error'](...items);
   newline_count = 0;
-  marker_manager.updateMarkers();
+}
+
+export function ConsoleErrorNotEmpty(...items: any[]) {
+  for (const item of items) {
+    if (Array.isArray(item) && item.length === 0) continue;
+    if (ArrayBuffer.isView(item) && item.byteLength === 0) continue;
+    if (typeof item === 'string' && item.length === 0) continue;
+
+    // biome-ignore lint: this let's us search for undesired console[log]s
+    console['error'](...items);
+    newline_count = 0;
+    break;
+  }
 }
 
 export function ConsoleErrorWithDate(...items: any[]) {
   // biome-ignore lint: this let's us search for undesired console[error]s
-  console['error'](`[${new Date().toLocaleTimeString()}]`, ...items);
+  console['error'](`[${new Date().toLocaleString()}]`, ...items);
   newline_count = 0;
-  marker_manager.updateMarkers();
 }
 
 export function ConsoleLog(...items: any[]) {
   // biome-ignore lint: this let's us search for undesired console[log]s
   console['log'](...items);
   newline_count = 0;
-  marker_manager.updateMarkers();
+}
+
+export function ConsoleLogNotEmpty(...items: any[]) {
+  for (const item of items) {
+    if (Array.isArray(item) && item.length === 0) continue;
+    if (ArrayBuffer.isView(item) && item.byteLength === 0) continue;
+    if (typeof item === 'string' && item.length === 0) continue;
+
+    // biome-ignore lint: this let's us search for undesired console[log]s
+    console['log'](...items);
+    newline_count = 0;
+    break;
+  }
 }
 
 export function ConsoleLogWithDate(...items: any[]) {
   // biome-ignore lint: this let's us search for undesired console[log]s
-  console['log'](`[${new Date().toLocaleTimeString()}]`, ...items);
+  console['log'](`[${new Date().toLocaleString()}]`, ...items);
   newline_count = 0;
-  marker_manager.updateMarkers();
 }
 
 export function ConsoleNewline(ensure_count = 1) {
@@ -41,7 +56,6 @@ export function ConsoleNewline(ensure_count = 1) {
     console['log']();
     newline_count++;
   }
-  marker_manager.updateMarkers();
 }
 
 export function ConsoleLogToLines(items: Iterable<any>) {

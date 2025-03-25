@@ -32,8 +32,7 @@ function activate(context) {
   }));
   context.subscriptions.push(...disposables);
 }
-function deactivate() {
-}
+function deactivate() {}
 
 exports.activate = activate;
 exports.deactivate = deactivate;

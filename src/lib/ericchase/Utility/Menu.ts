@@ -1,6 +1,6 @@
-import { HandlerCaller } from '../Design Pattern/Handler.js';
+import { HandlerCaller } from '../DesignPattern/Handler.js';
 import { SplitLines } from './String.js';
-import type { SyncAsync } from './Types.js';
+import { SyncAsync } from './Types.js';
 
 export type Menu = { name: string; label?: string; items: (Menu | MenuItem)[] };
 export type MenuItem = { name: string; action?: (options: MenuNavigatorSelectArgs) => SyncAsync<void> };
