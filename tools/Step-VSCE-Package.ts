@@ -16,10 +16,8 @@ class CStep_VSCE_Package implements Step {
   async end(builder: BuilderInternal) {}
   async run(builder: BuilderInternal) {
     await Step_Bun_Run({ cmd: ['vsce', 'package'], dir: builder.dir.out }).run(builder);
-
-    // const package_file = [...new GlobScanner().scan(builder.dir.out, '*.vsix').path_groups][0];
-    // if (package_file) {
-    //   await MoveFile({ from: package_file, to: package_folder.appendSegment(package_file.relative_path) });
-    // }
+    for (const path of await builder.platform.Directory.globScan(builder.dir.out, '*.vsix')) {
+      await builder.platform.File.move(Path(builder.dir.out, path), Path(this.release_dirpath, path), true);
+    }
   }
 }
