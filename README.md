@@ -2,7 +2,11 @@
 
 https://github.com/ericchase-library/ts-templates-vscode-extension
 
-This is a template for VSCode extension projects. Please read the `README.md` file at https://github.com/ericchase-library/ts-library for more information.
+## Library Project
+
+Please visit the library project for information about my build TypeScript library and templates.
+
+- https://github.com/ericchase-library/ts-library
 
 ## Disclaimer
 
@@ -73,6 +77,12 @@ This folder is produced during the normal build process and will contain the fin
 
 - This project produces a Visual Studio Code extension.
 - _You may modify the contents of this folder for testing and debugging purposes, but keep in mind that these files are overwritten during each build._
+
+### ./release/
+
+This folder contains the final `.vsix` files for each version of the packaged extension.
+
+- The resulting files should be ready for publishing.
 
 ## Copyright & License
 
