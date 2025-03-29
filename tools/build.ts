@@ -8,6 +8,7 @@ import { Step_Bun_Run } from './lib/steps/Bun-Run.js';
 import { Step_CleanDirectory } from './lib/steps/FS-CleanDirectory.js';
 import { Step_Format } from './lib/steps/FS-Format.js';
 import { Processor_JavaScript_Rollup } from './Processor-JavaScript-Rollup.js';
+import { Step_NPM_InstallDependencies } from './Step-NPM-InstallExtensionDependencies.js';
 import { Step_VSCE_Package } from './Step-VSCE-Package.js';
 
 // Use command line arguments to set watch mode.
@@ -45,6 +46,7 @@ builder.setAfterProcessingSteps();
 // These steps are run during the shutdown phase only.
 builder.setCleanupSteps(
   // This takes a little while, so best to do it once at the end.
+  Step_NPM_InstallDependencies(),
   Step_VSCE_Package('release'),
   //
 );
