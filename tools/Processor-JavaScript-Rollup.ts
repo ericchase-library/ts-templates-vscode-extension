@@ -25,14 +25,14 @@ class CProcessor_JavaScript_Rollup implements ProcessorModule {
     this.cmd.push('--format=cjs');
     this.cmd.push('--stdin=js');
   }
-  async onAdd(builder: BuilderInternal, files: Set<ProjectFile>) {
+  async onAdd(builder: BuilderInternal, files: Set<ProjectFile>): Promise<void> {
     for (const file of files) {
       if (builder.platform.Utility.globMatch(file.src_path.standard, '**/*{.module,.script}{.ts,.tsx,.jsx}')) {
         file.addProcessor(this, this.onProcess);
       }
     }
   }
-  async onRemove(builder: BuilderInternal, files: Set<ProjectFile>): Promise<void> {}
+
   async onProcess(builder: BuilderInternal, file: ProjectFile): Promise<void> {
     this.channel.log(`Rollup: "${file.src_path.raw}"`);
     const p0 = Bun.spawn(this.cmd, { stdin: await file.getBytes(), stderr: 'pipe', stdout: 'pipe' });
