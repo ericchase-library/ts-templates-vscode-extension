@@ -1,7 +1,7 @@
-import { CPath, Path } from '../src/lib/ericchase/Platform/FilePath.js';
-import { Logger } from '../src/lib/ericchase/Utility/Logger.js';
-import { BuilderInternal, Step } from './lib/Builder.js';
-import { Step_Bun_Run } from './lib/steps/Bun-Run.js';
+import { CPath, Path } from '../../../src/lib/ericchase/Platform/FilePath.js';
+import { Logger } from '../../../src/lib/ericchase/Utility/Logger.js';
+import { BuilderInternal, Step } from '../../lib/Builder.js';
+import { Step_Bun_Run } from '../../lib/steps/Bun-Run.js';
 
 const logger = Logger(Step_VSCE_Package.name);
 

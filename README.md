@@ -2,7 +2,7 @@
 
 https://github.com/ericchase-library/ts-templates-vscode-extension
 
-This project houses the base Visual Studio Code extension template project that I use to create new Visual Studio Code extension template projects.
+This project houses the base Visual Studio Code extension template project that I use to create new Visual Studio Code extension projects.
 
 ## TypeScript Library and Template Project
 

@@ -1,9 +1,10 @@
-import { ArrayEquals } from '../src/lib/ericchase/Algorithm/Array.js';
-import { U8StreamReadAll } from '../src/lib/ericchase/Algorithm/Stream.js';
-import { U8ToString } from '../src/lib/ericchase/Algorithm/Uint8Array.js';
-import { Logger } from '../src/lib/ericchase/Utility/Logger.js';
-import { BuilderInternal, ProcessorModule, ProjectFile } from './lib/Builder.js';
-import { module_script, ts_tsx_js_jsx } from './lib/processors/TypeScript-GenericBundler.js';
+import { ArrayEquals } from '../../../src/lib/ericchase/Algorithm/Array.js';
+import { U8StreamReadAll } from '../../../src/lib/ericchase/Algorithm/Stream.js';
+import { U8ToString } from '../../../src/lib/ericchase/Algorithm/Uint8Array.js';
+import { IntoPattern } from '../../../src/lib/ericchase/Platform/FilePath.js';
+import { Logger } from '../../../src/lib/ericchase/Utility/Logger.js';
+import { BuilderInternal, ProcessorModule, ProjectFile } from '../../lib/Builder.js';
+import { pattern } from '../../lib/processors/TypeScript-GenericBundler.js';
 
 const logger = Logger(Processor_JavaScript_Rollup.name);
 
@@ -28,7 +29,7 @@ class CProcessor_JavaScript_Rollup implements ProcessorModule {
   }
   async onAdd(builder: BuilderInternal, files: Set<ProjectFile>): Promise<void> {
     for (const file of files) {
-      if (builder.platform.Utility.globMatch(file.src_path.standard, `**/*${module_script}${ts_tsx_js_jsx}`)) {
+      if (builder.platform.Utility.globMatch(IntoPattern(file.src_path), `**/*${pattern.moduleoriife}`)) {
         file.addProcessor(this, this.onProcess);
       }
     }
