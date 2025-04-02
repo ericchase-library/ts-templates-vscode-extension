@@ -14,7 +14,7 @@ builder.setStartUpSteps(
   // Pull VSCode-Extension Template Tools Lib
   Step_MirrorDirectory({
     from: Path('C:/Code/Base/JavaScript-TypeScript/Templates/VSCode-Extension', 'tools/lib-vscode-extension'),
-    to: Path('tools/lib-vscode-extension'),
+    to: Path(builder.dir.tools, 'lib-vscode-extension'),
     include_patterns: ['**/*'],
   }),
   //
