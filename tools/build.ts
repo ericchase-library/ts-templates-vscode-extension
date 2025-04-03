@@ -64,7 +64,4 @@ builder.setCleanUpSteps(
   //
 );
 
-// These steps are run during the shutdown phase only.
-builder.setCleanUpSteps();
-
 await builder.start();
