@@ -16,7 +16,7 @@ class Class implements Builder.Processor {
   cmd: string[];
   constructor(public config: Config) {
     this.config.external ??= [];
-    this.cmd = ['rollup'];
+    this.cmd = ['bun', 'run', 'rollup'];
     if (this.config.external.length > 0) {
       this.cmd.push(`--external=${this.config.external.join(',')}`);
     }
