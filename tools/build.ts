@@ -1,30 +1,35 @@
-import { IntoPattern } from '../src/lib/ericchase/Platform/FilePath.js';
-import { Processor_JavaScript_Rollup } from './lib-vscode-extension/processors/JavaScript-Rollup.js';
-import { Step_NPM_InstallDependencies } from './lib-vscode-extension/steps/NPM-InstallExtensionDependencies.js';
-import { Step_VSCE_Package } from './lib-vscode-extension/steps/VSCE-Package.js';
-import { Builder } from './lib/Builder.js';
-import { Processor_BasicWriter } from './lib/processors/FS-BasicWriter.js';
-import { Processor_HTML_CustomComponent } from './lib/processors/HTML-CustomComponent.js';
-import { Processor_HTML_ImportConverter } from './lib/processors/HTML-ImportConverter.js';
-import { Processor_TypeScript_GenericBundlerImportRemapper } from './lib/processors/TypeScript-GenericBundler-ImportRemapper.js';
-import { pattern, Processor_TypeScript_GenericBundler } from './lib/processors/TypeScript-GenericBundler.js';
-import { Step_Bun_Run } from './lib/steps/Bun-Run.js';
-import { Step_CleanDirectory } from './lib/steps/FS-CleanDirectory.js';
-import { Step_Format } from './lib/steps/FS-Format.js';
+import { BunPlatform_Args_Has } from '../src/lib/ericchase/BunPlatform_Args_Has.js';
+import { Step_Dev_Format } from './core-dev/step/Step_Dev_Format.js';
+import { Step_Dev_Project_Sync_Config } from './core-dev/step/Step_Dev_Project_Sync_Config.js';
+import { Processor_HTML_Custom_Component_Processor } from './core-web/processor/Processor_HTML_Custom_Component_Processor.js';
+import { Builder } from './core/Builder.js';
+import { Processor_Set_Writable } from './core/processor/Processor_Set_Writable.js';
+import { PATTERN, Processor_TypeScript_Generic_Bundler } from './core/processor/Processor_TypeScript_Generic_Bundler.js';
+import { Step_Bun_Run } from './core/step/Step_Bun_Run.js';
+import { Step_FS_Clean_Directory } from './core/step/Step_FS_Clean_Directory.js';
+import { Processor_JavaScript_Rollup } from './lib-vscode-extension/processors/Processor_JavaScript_Rollup.js';
+import { Step_NPM_Install_Extension_Dependencies } from './lib-vscode-extension/steps/Step_NPM_Install_Extension_Dependencies.js';
+// import { Step_NPM_InstallDependencies } from './lib-vscode-extension/steps/NPM-InstallExtensionDependencies.js';
+import { Step_VSCE_Package } from './lib-vscode-extension/steps/Step_VSCE_Package.js';
 
 // Use command line arguments to set watch mode.
-const builder = new Builder(Bun.argv[2] === '--watch' ? 'watch' : 'build');
+if (BunPlatform_Args_Has('--dev')) {
+  Builder.SetMode(Builder.MODE.DEV);
+}
+Builder.SetVerbosity(Builder.VERBOSITY._1_LOG);
 
 // These steps are run during the startup phase only.
-builder.setStartUpSteps(
-  Step_Bun_Run({ cmd: ['bun', 'install'] }, 'quiet'),
-  Step_CleanDirectory(builder.dir.out),
-  Step_Format('quiet'),
+Builder.SetStartUpSteps(
+  // Step_Bun_Run({ cmd: ['bun', 'update', '--latest'], showlogs: false }),
+  // Step_Bun_Run({ cmd: ['bun', 'install'], showlogs: false }),
+  Step_FS_Clean_Directory(Builder.Dir.Out),
+  // Step_Dev_Project_Sync_Config({ project_path: './' }),
+  // Step_Dev_Format({ showlogs: false }),
   //
 );
 
 // These steps are run before each processing phase.
-builder.setBeforeProcessingSteps();
+Builder.SetBeforeProcessingSteps();
 
 // Basic setup for a typescript powered project. Typescript files that match
 // "*.module.ts" and "*.iife.ts" are bundled and written to the out folder.
@@ -39,29 +44,27 @@ builder.setBeforeProcessingSteps();
 
 // The processors are run for every file that added them during every
 // processing phase.
-builder.setProcessorModules(
-  Processor_HTML_CustomComponent(),
-  Processor_HTML_ImportConverter(),
+Builder.SetProcessorModules(
+  // Process the custom html components.
+  Processor_HTML_Custom_Component_Processor(),
   // Bundle the modules.
-  Processor_TypeScript_GenericBundler({ external: ['vscode'], target: 'node' }),
-  Processor_TypeScript_GenericBundlerImportRemapper(),
+  Processor_TypeScript_Generic_Bundler({ external: ['vscode'], target: 'node' }),
   Processor_JavaScript_Rollup({ external: ['vscode'] }),
   // Write non-bundle files and non-library files.
-  Processor_BasicWriter(['**/*'], ['**/*{.ts,.tsx,.jsx}', IntoPattern(builder.dir.lib, '**/*')]),
+  Processor_Set_Writable({ include_patterns: ['**/*'], exclude_patterns: [`**/*${PATTERN.MODULE_IIFE}`] }, { include_libdir: false }),
   // Write bundled files.
-  Processor_BasicWriter([`**/*${pattern.moduleoriife}`], []),
-  //
+  Processor_Set_Writable({ include_patterns: [`**/*${PATTERN.MODULE_IIFE}`] }, { include_libdir: true }),
 );
 
 // These steps are run after each processing phase.
-builder.setAfterProcessingSteps();
+Builder.SetAfterProcessingSteps();
 
 // These steps are run during the shutdown phase only.
-builder.setCleanUpSteps(
+Builder.SetCleanUpSteps(
   // This takes a little while, so best to do it once at the end.
-  Step_NPM_InstallDependencies(),
-  Step_VSCE_Package('release'),
+  Step_NPM_Install_Extension_Dependencies(),
+  Step_VSCE_Package({ release_dir: 'release' }),
   //
 );
 
-await builder.start();
+await Builder.Start();

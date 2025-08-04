@@ -3,7 +3,9 @@
   "displayName": "a-vscode-extension",
   "version": "0.0.1",
   "description": "A VSCode Extension.",
-  "categories": ["Other"],
+  "categories": [
+    "Other"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/ericchase-library/ts-templates-vscode-extension.git"
