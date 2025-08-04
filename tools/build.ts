@@ -1,8 +1,11 @@
 import { BunPlatform_Args_Has } from '../src/lib/ericchase/BunPlatform_Args_Has.js';
+import { Step_Dev_Format } from './core-dev/step/Step_Dev_Format.js';
+import { Step_Dev_Project_Sync_Config } from './core-dev/step/Step_Dev_Project_Sync_Config.js';
 import { Processor_HTML_Custom_Component_Processor } from './core-web/processor/Processor_HTML_Custom_Component_Processor.js';
 import { Builder } from './core/Builder.js';
 import { Processor_Set_Writable } from './core/processor/Processor_Set_Writable.js';
 import { PATTERN, Processor_TypeScript_Generic_Bundler } from './core/processor/Processor_TypeScript_Generic_Bundler.js';
+import { Step_Bun_Run } from './core/step/Step_Bun_Run.js';
 import { Step_FS_Clean_Directory } from './core/step/Step_FS_Clean_Directory.js';
 import { Processor_JavaScript_Rollup } from './lib-vscode-extension/processors/Processor_JavaScript_Rollup.js';
 import { Step_NPM_Install_Extension_Dependencies } from './lib-vscode-extension/steps/Step_NPM_Install_Extension_Dependencies.js';
@@ -16,11 +19,11 @@ Builder.SetVerbosity(Builder.VERBOSITY._1_LOG);
 
 // These steps are run during the startup phase only.
 Builder.SetStartUpSteps(
-  // Step_Bun_Run({ cmd: ['bun', 'update', '--latest'], showlogs: false }),
-  // Step_Bun_Run({ cmd: ['bun', 'install'], showlogs: false }),
+  Step_Bun_Run({ cmd: ['bun', 'update', '--latest'], showlogs: false }),
+  Step_Bun_Run({ cmd: ['bun', 'install'], showlogs: false }),
   Step_FS_Clean_Directory(Builder.Dir.Out),
-  // Step_Dev_Project_Sync_Config({ project_path: './' }),
-  // Step_Dev_Format({ showlogs: false }),
+  Step_Dev_Project_Sync_Config({ project_path: './' }),
+  Step_Dev_Format({ showlogs: false }),
   //
 );
 
