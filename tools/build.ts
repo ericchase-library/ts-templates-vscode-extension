@@ -46,11 +46,12 @@ Builder.SetBeforeProcessingSteps();
 Builder.SetProcessorModules(
   // Process the custom html components.
   Processor_HTML_Custom_Component_Processor(),
-  // Bundle the modules.
-  Processor_TypeScript_Generic_Bundler({ external: ['vscode'], target: 'node' }),
+  // Bundle the iife scripts and modules.
+  Processor_TypeScript_Generic_Bundler({ target: 'node' }, { bundler_mode: 'iife' }),
+  Processor_TypeScript_Generic_Bundler({ external: ['vscode'], target: 'node' }, { bundler_mode: 'module' }),
   Processor_JavaScript_Rollup({ external: ['vscode'] }),
   // Write non-bundle files and non-library files.
-  Processor_Set_Writable({ include_patterns: ['**/*'], exclude_patterns: [`**/*${PATTERN.MODULE_IIFE}`] }),
+  Processor_Set_Writable({ include_patterns: ['**/*'], exclude_patterns: [`**/*${PATTERN.IIFE_MODULE}`] }),
 );
 
 // These steps are run after each processing phase.

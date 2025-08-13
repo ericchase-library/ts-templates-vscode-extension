@@ -13,9 +13,11 @@ class Class implements Builder.Processor {
   ProcessorName = Processor_JavaScript_Rollup.name;
   channel = Logger(this.ProcessorName).newChannel();
 
-  cmd: string[];
-  constructor(public config: Config) {
+  cmd: string[] = [];
+  constructor(public config: Config) {}
+  async onStartUp(): Promise<void> {
     this.config.external ??= [];
+
     this.cmd = ['bun', 'run', 'rollup'];
     if (this.config.external.length > 0) {
       this.cmd.push(`--external=${this.config.external.join(',')}`);
@@ -23,16 +25,13 @@ class Class implements Builder.Processor {
     this.cmd.push('--format=cjs');
     this.cmd.push('--stdin=js');
   }
-  async onStartUp(): Promise<void> {}
   async onAdd(files: Set<Builder.File>): Promise<void> {
     for (const file of files) {
-      if (BunPlatform_Glob_Match(file.src_path, `**/*${PATTERN.MODULE_IIFE}`)) {
+      if (BunPlatform_Glob_Match(file.src_path, Builder.Dir.Src + '/' + '**/*' + PATTERN.IIFE_MODULE)) {
         file.addProcessor(this, this.onProcess);
       }
     }
   }
-  async onRemove(files: Set<Builder.File>): Promise<void> {}
-  async onCleanUp(): Promise<void> {}
 
   async onProcess(file: Builder.File): Promise<void> {
     this.channel.log(`Rollup: "${file.src_path}"`);
@@ -55,5 +54,6 @@ class Class implements Builder.Processor {
   }
 }
 interface Config {
+  /** @default [] */
   external?: string[];
 }
