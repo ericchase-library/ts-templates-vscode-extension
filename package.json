@@ -4,11 +4,11 @@
     "@types/adm-zip": "0.5.7",
     "@types/bun": "1.2.20",
     "@types/chrome": "0.1.4",
-    "@types/node": "24.2.1",
+    "@types/node": "24.3.0",
     "adm-zip": "0.5.16",
     "tree-kill": "1.2.2",
     "xxhash-wasm": "1.1.0",
-    "@types/vscode": "1.102.0",
+    "@types/vscode": "1.103.0",
     "@vscode/test-cli": "0.0.11",
     "@vscode/vsce": "3.6.0",
     "rollup": "4.46.2"
