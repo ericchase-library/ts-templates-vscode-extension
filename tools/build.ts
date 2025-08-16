@@ -52,6 +52,7 @@ Builder.SetProcessorModules(
   Processor_JavaScript_Rollup({ external: ['vscode'] }),
   // Write non-bundle files and non-library files.
   Processor_Set_Writable({ include_patterns: ['**/*'], exclude_patterns: [`**/*${PATTERN.IIFE_MODULE}`] }),
+  //
 );
 
 // These steps are run after each processing phase.
