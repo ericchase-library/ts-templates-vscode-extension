@@ -12,15 +12,13 @@ class Class implements Builder.Step {
   StepName = Step_VSCE_Package.name;
   channel = Logger(this.StepName).newChannel();
 
-  constructor(public config: Config) {}
-  async onStartUp(): Promise<void> {}
+  constructor(readonly config: Config) {}
   async onRun(): Promise<void> {
     await Step_Bun_Run({ cmd: ['bun', 'run', 'vsce', 'package'], dir: Builder.Dir.Out }).onRun?.();
     for await (const path of Async_BunPlatform_Glob_Scan_Generator(Builder.Dir.Out, '*.vsix')) {
       await Async_BunPlatform_File_Move(NODE_PATH.join(Builder.Dir.Out, path), NODE_PATH.join(this.config.release_dir, path), true);
     }
   }
-  async onCleanUp(): Promise<void> {}
 }
 interface Config {
   release_dir: string;

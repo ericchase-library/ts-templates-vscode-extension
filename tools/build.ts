@@ -11,10 +11,11 @@ import { Processor_JavaScript_Rollup } from './lib-vscode-extension/processors/P
 import { Step_NPM_Install_Extension_Dependencies } from './lib-vscode-extension/steps/Step_NPM_Install_Extension_Dependencies.js';
 import { Step_VSCE_Package } from './lib-vscode-extension/steps/Step_VSCE_Package.js';
 
-// Use command line arguments to set dev mode.
+// Use command line arguments to set developer mode.
 if (BunPlatform_Args_Has('--dev')) {
   Builder.SetMode(Builder.MODE.DEV);
 }
+// Set the logging verbosity
 Builder.SetVerbosity(Builder.VERBOSITY._1_LOG);
 
 // These steps are run during the startup phase only.
@@ -30,35 +31,35 @@ Builder.SetStartUpSteps(
 // These steps are run before each processing phase.
 Builder.SetBeforeProcessingSteps();
 
-// Basic setup for a TypeScript powered project. TypeScript files that match
-// "*.module.ts" and "*.iife.ts" are bundled and written to the out folder.
-// The other TypeScript files do not produce bundles. Module ("*.module.ts")
-// files will not bundle other module files. Instead, they'll import whatever
-// exports are needed from other module files. IIFE ("*.iife.ts") files, on
-// the other hand, produce fully contained bundles. They do not import anything
-// from anywhere. Use them accordingly.
+// Basic setup for a TypeScript project. TypeScript files that match
+// "*.module.ts" and "*.iife.ts" are bundled and written to the out folder. The
+// other TypeScript files do not produce bundles. Module scripts
+// ("*.module.ts") will not bundle other module scripts. Instead, they'll
+// import whatever exports are needed from other module scripts. IIFE scripts
+// ("*.iife.ts"), on the other hand, produce fully contained bundles. They do
+// not import anything from anywhere. Use them accordingly.
 
 // HTML custom components are a lightweight alternative to web components made
-// possible by the processors below.
+// possible by the processor I wrote.
 
 // The processors are run for every file that added them during every
 // processing phase.
 Builder.SetProcessorModules(
-  // Process the custom html components.
+  // Process the HTML custom components.
   Processor_HTML_Custom_Component_Processor(),
-  // Bundle the iife scripts and modules.
+  // Bundle the IIFE scripts and module scripts.
   Processor_TypeScript_Generic_Bundler({ target: 'node' }, { bundler_mode: 'iife' }),
   Processor_TypeScript_Generic_Bundler({ external: ['vscode'], target: 'node' }, { bundler_mode: 'module' }),
   Processor_JavaScript_Rollup({ external: ['vscode'] }),
-  // Write non-bundle files and non-library files.
-  Processor_Set_Writable({ include_patterns: ['**/*'], exclude_patterns: [`**/*${PATTERN.IIFE_MODULE}`] }),
+  // Write non-bundle and non-library files.
+  Processor_Set_Writable({ include_patterns: ['**/*'], exclude_patterns: [`**/*${PATTERN.IIFE_MODULE}`], value: true }),
   //
 );
 
 // These steps are run after each processing phase.
 Builder.SetAfterProcessingSteps();
 
-// These steps are run during the shutdown phase only.
+// These steps are run during the cleanup phase only.
 Builder.SetCleanUpSteps(
   // This takes a little while, so best to do it once at the end.
   Step_NPM_Install_Extension_Dependencies(),

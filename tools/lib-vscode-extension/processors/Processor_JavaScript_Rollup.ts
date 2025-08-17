@@ -14,7 +14,7 @@ class Class implements Builder.Processor {
   channel = Logger(this.ProcessorName).newChannel();
 
   cmd: string[] = [];
-  constructor(public config: Config) {}
+  constructor(readonly config: Config) {}
   async onStartUp(): Promise<void> {
     this.config.external ??= [];
 
@@ -27,7 +27,7 @@ class Class implements Builder.Processor {
   }
   async onAdd(files: Set<Builder.File>): Promise<void> {
     for (const file of files) {
-      if (BunPlatform_Glob_Match(file.src_path, Builder.Dir.Src + '/' + '**/*' + PATTERN.IIFE_MODULE)) {
+      if (BunPlatform_Glob_Match(file.src_path, `${Builder.Dir.Src}/**/*${PATTERN.IIFE_MODULE}`)) {
         file.addProcessor(this, this.onProcess);
       }
     }
