@@ -11,6 +11,9 @@ import { Processor_JavaScript_Rollup } from './lib-vscode-extension/processors/P
 import { Step_NPM_Install_Extension_Dependencies } from './lib-vscode-extension/steps/Step_NPM_Install_Extension_Dependencies.js';
 import { Step_VSCE_Package } from './lib-vscode-extension/steps/Step_VSCE_Package.js';
 
+// If needed, add `cache` directory to the logger's file writer.
+// await AddLoggerOutputDirectory('cache');
+
 // Use command line arguments to set developer mode.
 if (BunPlatform_Args_Has('--dev')) {
   Builder.SetMode(Builder.MODE.DEV);
