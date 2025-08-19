@@ -1,10 +1,11 @@
-import { BunPlatform_Args_Has } from '../src/lib/ericchase/BunPlatform_Args_Has.js';
+import { BunPlatform_Argv_Includes } from '../src/lib/ericchase/BunPlatform_Argv_Includes.js';
 import { Step_Dev_Format } from './core-dev/step/Step_Dev_Format.js';
 import { Step_Dev_Project_Update_Config } from './core-dev/step/Step_Dev_Project_Update_Config.js';
 import { Processor_HTML_Custom_Component_Processor } from './core-web/processor/Processor_HTML_Custom_Component_Processor.js';
+import { Processor_HTML_Remove_HotReload_On_Build } from './core-web/processor/Processor_HTML_Remove_HotReload_On_Build.js';
 import { Builder } from './core/Builder.js';
 import { Processor_Set_Writable } from './core/processor/Processor_Set_Writable.js';
-import { PATTERN, Processor_TypeScript_Generic_Bundler } from './core/processor/Processor_TypeScript_Generic_Bundler.js';
+import { Processor_TypeScript_Generic_Bundler } from './core/processor/Processor_TypeScript_Generic_Bundler.js';
 import { Step_Bun_Run } from './core/step/Step_Bun_Run.js';
 import { Step_FS_Clean_Directory } from './core/step/Step_FS_Clean_Directory.js';
 import { Processor_JavaScript_Rollup } from './lib-vscode-extension/processors/Processor_JavaScript_Rollup.js';
@@ -15,7 +16,7 @@ import { Step_VSCE_Package } from './lib-vscode-extension/steps/Step_VSCE_Packag
 // await AddLoggerOutputDirectory('cache');
 
 // Use command line arguments to set developer mode.
-if (BunPlatform_Args_Has('--dev')) {
+if (BunPlatform_Argv_Includes('--dev')) {
   Builder.SetMode(Builder.MODE.DEV);
 }
 // Set the logging verbosity
@@ -48,6 +49,7 @@ Builder.SetBeforeProcessingSteps();
 // The processors are run for every file that added them during every
 // processing phase.
 Builder.SetProcessorModules(
+  Processor_HTML_Remove_HotReload_On_Build(),
   // Process the HTML custom components.
   Processor_HTML_Custom_Component_Processor(),
   // Bundle the IIFE scripts and module scripts.
@@ -55,7 +57,7 @@ Builder.SetProcessorModules(
   Processor_TypeScript_Generic_Bundler({ external: ['vscode'], target: 'node' }, { bundler_mode: 'module' }),
   Processor_JavaScript_Rollup({ external: ['vscode'] }),
   // Write non-bundle and non-library files.
-  Processor_Set_Writable({ include_patterns: ['**/*'], exclude_patterns: [`**/*${PATTERN.IIFE_MODULE}`], value: true }),
+  Processor_Set_Writable({ include_patterns: ['**/*'], value: true }),
   //
 );
 
