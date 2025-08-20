@@ -65,10 +65,17 @@ Builder.SetAfterProcessingSteps();
 
 // These steps are run during the cleanup phase only.
 Builder.SetCleanUpSteps(
+  /**
+   * Use these steps when patching an existing extension.
+   *
+   * // Move original extension build files out of sub-folder
+   * Step_FS_Copy_Files({ from_path: NODE_PATH.join(Builder.Dir.Out, 'original-repo'), to_path: Builder.Dir.Out, include_patterns: ['**'], overwrite: true }),
+   * Step_FS_Delete_Directory(NODE_PATH.join(Builder.Dir.Out, 'original-repo')),
+   */
   // This takes a little while, so best to do it once at the end.
   Step_NPM_Install_Extension_Dependencies(),
   Step_Dev_Format({ showlogs: false }),
-  Step_VSCE_Package({ release_dirpath: 'release' }),
+  Step_VSCE_Package({ entrypoint: 'extension.module.ts', release_dirpath: 'release' }),
   //
 );
 
