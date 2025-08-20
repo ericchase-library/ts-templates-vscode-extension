@@ -51,7 +51,7 @@ Builder.SetProcessorModules(
   Processor_TypeScript_Generic_Bundler({ external: ['vscode'], target: 'node' }, { bundler_mode: 'module' }),
   Processor_JavaScript_Rollup({ external: ['vscode'] }),
   // Write non-bundle and non-library files.
-  Processor_Set_Writable({ include_patterns: ['**/*'], value: true }),
+  Processor_Set_Writable({ include_patterns: ['**'], value: true }),
   //
 );
 
