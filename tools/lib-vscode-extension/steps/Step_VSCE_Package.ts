@@ -5,6 +5,7 @@ import { Async_BunPlatform_Glob_Scan_Generator } from '../../../src/lib/ericchas
 import { NODE_PATH } from '../../../src/lib/ericchase/NodePlatform.js';
 import { NodePlatform_PathObject_Relative_Class } from '../../../src/lib/ericchase/NodePlatform_PathObject_Relative_Class.js';
 import { Builder } from '../../core/Builder.js';
+import { SEMVER_UTIL } from '../../core/bundle/semver-util/semver-util.js';
 import { Logger } from '../../core/Logger.js';
 import { Step_Bun_Run } from '../../core/step/Step_Bun_Run.js';
 
@@ -16,22 +17,28 @@ class Class implements Builder.Step {
   channel = Logger(this.StepName).newChannel();
 
   constructor(readonly config: Config) {}
-  async onStartUp(): Promise<void> {
-    this.config.entrypoint ??= 'extension.module.js';
-  }
   async onRun(): Promise<void> {
-    if (this.config.entrypoint === undefined) {
-      throw new Error('Property "config.entrypoint" is undefined. Did you attempt to call the "onRun" method directly? Use "Builder.ExecuteStep" instead.');
-    }
     // write empty .vscodeignore file, as we don't need it
     await Async_BunPlatform_File_Write_Text(NODE_PATH.join(Builder.Dir.Out, '.vscodeignore'), '');
-    // remove "scripts" and "devDependencies" properties from package.json
+    // modify package.json
     const { error, value: text } = await Async_BunPlatform_File_Read_Text(NODE_PATH.join(Builder.Dir.Out, 'package.json'));
     if (text !== undefined) {
       const package_json = JSON.parse(text);
+      // remove scripts and devDependencies
       delete package_json.scripts;
       delete package_json.devDependencies;
-      package_json.main = NodePlatform_PathObject_Relative_Class(this.config.entrypoint).replaceExt('.js').toPosix().join({ dot: true });
+      // set entrypoint
+      const entrypoint = this.config.entrypoint ?? package_json.main ?? 'extension.module.js';
+      package_json.main = NodePlatform_PathObject_Relative_Class(entrypoint).replaceExt('.js').toPosix().join({ dot: true });
+      // increment version
+      if (this.config.increment_version !== undefined) {
+        const new_version = SEMVER_UTIL.increment(package_json.version, this.config.increment_version);
+        if (new_version !== undefined) {
+          package_json.version = new_version;
+        } else {
+          this.channel.error(new Error('The package.json "version" property is not a valid semantic version.'));
+        }
+      }
       await Async_BunPlatform_File_Write_Text(NODE_PATH.join(Builder.Dir.Out, 'package.json'), JSON.stringify(package_json, null, 2));
     } else {
       throw error;
@@ -46,4 +53,11 @@ interface Config {
   release_dirpath: string;
   /** @default "extension.module.js" */
   entrypoint?: string;
+  /**
+   * Use this to increment the package.json "version" property once for this
+   * build. Useful when patching an existing extension. For your own extension,
+   * update the actual "version" property of the actual package.json, instead.
+   * @default undefined
+   */
+  increment_version?: Parameters<typeof SEMVER_UTIL.increment>[1];
 }
