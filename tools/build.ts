@@ -1,8 +1,6 @@
 import { BunPlatform_Argv_Includes } from '../src/lib/ericchase/BunPlatform_Argv_Includes.js';
 import { Step_Dev_Format } from './core-dev/step/Step_Dev_Format.js';
 import { Step_Dev_Project_Update_Config } from './core-dev/step/Step_Dev_Project_Update_Config.js';
-import { Processor_HTML_Custom_Component_Processor } from './core-web/processor/Processor_HTML_Custom_Component_Processor.js';
-import { Processor_HTML_Remove_HotReload_On_Build } from './core-web/processor/Processor_HTML_Remove_HotReload_On_Build.js';
 import { Builder } from './core/Builder.js';
 import { Processor_Set_Writable } from './core/processor/Processor_Set_Writable.js';
 import { Processor_TypeScript_Generic_Bundler } from './core/processor/Processor_TypeScript_Generic_Bundler.js';
@@ -28,7 +26,6 @@ Builder.SetStartUpSteps(
   Step_Bun_Run({ cmd: ['bun', 'update', '--latest'], showlogs: false }),
   Step_Bun_Run({ cmd: ['bun', 'install'], showlogs: false }),
   Step_FS_Clean_Directory(Builder.Dir.Out),
-  Step_Dev_Format({ showlogs: false }),
   //
 );
 
@@ -49,9 +46,6 @@ Builder.SetBeforeProcessingSteps();
 // The processors are run for every file that added them during every
 // processing phase.
 Builder.SetProcessorModules(
-  Processor_HTML_Remove_HotReload_On_Build(),
-  // Process the HTML custom components.
-  Processor_HTML_Custom_Component_Processor(),
   // Bundle the IIFE scripts and module scripts.
   Processor_TypeScript_Generic_Bundler({ target: 'node' }, { bundler_mode: 'iife' }),
   Processor_TypeScript_Generic_Bundler({ external: ['vscode'], target: 'node' }, { bundler_mode: 'module' }),
@@ -68,6 +62,7 @@ Builder.SetAfterProcessingSteps();
 Builder.SetCleanUpSteps(
   // This takes a little while, so best to do it once at the end.
   Step_NPM_Install_Extension_Dependencies(),
+  Step_Dev_Format({ showlogs: false }),
   Step_VSCE_Package({ release_dir: 'release' }),
   //
 );

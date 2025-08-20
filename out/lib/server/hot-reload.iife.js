@@ -3,7 +3,7 @@
 (() => {
   // src/lib/ericchase/Core_Console_Error.ts
   function Core_Console_Error(...items) {
-    console["error"](...items);
+    console['error'](...items);
   }
 
   // src/lib/server/info.ts
@@ -43,12 +43,12 @@
   }
   function startup(serverhost) {
     try {
-      socket = new WebSocket("ws://" + serverhost);
+      socket = new WebSocket('ws://' + serverhost);
       if (socket !== undefined) {
         socket.onclose = () => cleanup();
         socket.onerror = () => cleanup();
         socket.onmessage = (event) => {
-          if (event.data === "reload") {
+          if (event.data === 'reload') {
             socket?.close();
             setTimeout(() => async_reloadOnServerRestart(serverhost), 100);
           }
