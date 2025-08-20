@@ -10,6 +10,6 @@ class Class implements Builder.Step {
   channel = Logger(this.StepName).newChannel();
 
   async onRun(): Promise<void> {
-    await Step_Bun_Run({ cmd: ['bun', 'install'], dir: Builder.Dir.Out }).onRun?.();
+    await Step_Bun_Run({ cmd: ['npm', 'install'], dir: Builder.Dir.Out }).onRun?.();
   }
 }
