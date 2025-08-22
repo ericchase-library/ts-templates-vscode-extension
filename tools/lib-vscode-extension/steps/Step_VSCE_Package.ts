@@ -28,8 +28,10 @@ class Class implements Builder.Step {
       delete package_json.scripts;
       delete package_json.devDependencies;
       // set entrypoint
-      const entrypoint = this.config.entrypoint ?? package_json.main ?? 'extension.module.js';
-      package_json.main = NodePlatform_PathObject_Relative_Class(entrypoint).replaceExt('.js').toPosix().join({ dot: true });
+      const entrypoint = this.config.entrypoint ?? package_json.main ?? undefined;
+      if (entrypoint !== undefined) {
+        package_json.main = NodePlatform_PathObject_Relative_Class(entrypoint).replaceExt('.js').toPosix().join({ dot: true });
+      }
       // increment version
       if (this.config.increment_version !== undefined) {
         const new_version = SEMVER_UTIL.increment(package_json.version, this.config.increment_version);
@@ -51,7 +53,10 @@ class Class implements Builder.Step {
 }
 interface Config {
   release_dirpath: string;
-  /** @default "extension.module.js" */
+  /**
+   * Note: Not all extensions need an entrypoint.
+   * @default undefined
+   */
   entrypoint?: string;
   /**
    * Use this to increment the package.json "version" property once for this
