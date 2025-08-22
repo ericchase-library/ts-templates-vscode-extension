@@ -49,11 +49,16 @@ Builder.SetBeforeProcessingSteps();
 
 // The processors are run for every file that added them during every
 // processing phase.
+
+const external = [
+  'vscode',
+  //
+];
 Builder.SetProcessorModules(
   // Bundle the IIFE scripts and module scripts.
   Processor_TypeScript_Generic_Bundler({ target: 'node' }, { bundler_mode: 'iife' }),
-  Processor_TypeScript_Generic_Bundler({ external: ['vscode'], target: 'node' }, { bundler_mode: 'module' }),
-  Processor_JavaScript_Rollup({ external: ['vscode'] }),
+  Processor_TypeScript_Generic_Bundler({ external, target: 'node' }, { bundler_mode: 'module' }),
+  Processor_JavaScript_Rollup({ external }),
   // Write non-bundle and non-library files.
   Processor_Set_Writable({ include_patterns: ['**'], value: true }),
   //
