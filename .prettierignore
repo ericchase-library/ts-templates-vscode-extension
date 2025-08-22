@@ -12,3 +12,7 @@ bun.lock
 
 # up to you whether you want to format the build files
 # /out/
+# original repo
+/src/original-repo
+# bundle will likely be extremely large, don't format
+/out/extension.module.js

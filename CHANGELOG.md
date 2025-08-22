@@ -2,6 +2,11 @@ Please refer to the `ts-library` changelog for library and build tool changes:
 
 - https://github.com/ericchase-library/ts-library/blob/main/CHANGELOG.md
 
+## 2025-08-22
+
+- Added cache to `Processor_JavaScript_Rollup.ts` for rollup output
+- Merged `Step_NPM_Install_Extension_Dependencies` into `Step_VSCE_Package`
+
 ## 2025-08-19
 
 - Removed `release/a-vscode-extension-0.0.1.vsix` from repo and commit history using `git-filter-repo`

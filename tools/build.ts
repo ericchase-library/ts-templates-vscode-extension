@@ -9,7 +9,6 @@ import { Processor_TypeScript_Generic_Bundler } from './core/processor/Processor
 import { Step_Bun_Run } from './core/step/Step_Bun_Run.js';
 import { Step_FS_Clean_Directory } from './core/step/Step_FS_Clean_Directory.js';
 import { Processor_JavaScript_Rollup } from './lib-vscode-extension/processors/Processor_JavaScript_Rollup.js';
-import { Step_NPM_Install_Extension_Dependencies } from './lib-vscode-extension/steps/Step_NPM_Install_Extension_Dependencies.js';
 import { Step_VSCE_Package } from './lib-vscode-extension/steps/Step_VSCE_Package.js';
 
 // If needed, add `cache` directory to the logger's file writer.
@@ -65,15 +64,10 @@ Builder.SetAfterProcessingSteps();
 
 // These steps are run during the cleanup phase only.
 Builder.SetCleanUpSteps(
-  /**
-   * Use these steps when patching an existing extension.
-   *
-   * // Move original extension build files out of sub-folder
-   * Step_FS_Copy_Files({ from_path: NODE_PATH.join(Builder.Dir.Out, 'original-repo'), to_path: Builder.Dir.Out, include_patterns: ['**'], overwrite: true }),
-   * Step_FS_Delete_Directory(NODE_PATH.join(Builder.Dir.Out, 'original-repo')),
-   */
-  // This takes a little while, so best to do it once at the end.
-  Step_NPM_Install_Extension_Dependencies(),
+  /** Flatten the out folder for original repo. Useful for patching existing
+   * extensions. */
+  // Step_Flatten_OriginalRepo_OutDir({ original_subdir: 'original-repo', merge_list: ['package.json', 'CHANGELOG.md', 'README.md'] }),
+
   Step_Dev_Format({ showlogs: false }),
   Step_VSCE_Package({ entrypoint: 'extension.module.ts', release_dirpath: 'release' }),
   //

@@ -45,6 +45,7 @@ class Class implements Builder.Step {
     } else {
       throw error;
     }
+    await Builder.ExecuteStep(Step_Bun_Run({ cmd: ['npm', 'install', '--omit=dev'], dir: Builder.Dir.Out }));
     await Builder.ExecuteStep(Step_Bun_Run({ cmd: ['bun', 'run', 'vsce', 'package'], dir: Builder.Dir.Out }));
     for await (const path of Async_BunPlatform_Glob_Scan_Generator(Builder.Dir.Out, '*.vsix')) {
       await Async_BunPlatform_File_Move(NODE_PATH.join(Builder.Dir.Out, path), NODE_PATH.join(this.config.release_dirpath, path), true);
