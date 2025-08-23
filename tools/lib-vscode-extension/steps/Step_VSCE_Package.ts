@@ -27,10 +27,10 @@ class Class implements Builder.Step {
       // remove scripts and devDependencies
       delete package_json.scripts;
       delete package_json.devDependencies;
-      // set entrypoint
-      const entrypoint = this.config.entrypoint ?? package_json.main ?? undefined;
-      if (entrypoint !== undefined) {
-        package_json.main = NodePlatform_PathObject_Relative_Class(entrypoint).replaceExt('.js').toPosix().join({ dot: true });
+      // set main
+      const main = this.config.main ?? package_json.main ?? undefined;
+      if (main !== undefined) {
+        package_json.main = NodePlatform_PathObject_Relative_Class(main).replaceExt('.js').toPosix().join({ dot: true });
       }
       // increment version
       if (this.config.increment_version !== undefined) {
@@ -45,24 +45,27 @@ class Class implements Builder.Step {
     } else {
       throw error;
     }
-    await Builder.ExecuteStep(Step_Bun_Run({ cmd: ['npm', 'install', '--omit=dev'], dir: Builder.Dir.Out }));
-    await Builder.ExecuteStep(Step_Bun_Run({ cmd: ['bun', 'run', 'vsce', 'package'], dir: Builder.Dir.Out }));
+    await Builder.ExecuteStep(Step_Bun_Run({ cmd: ['npm', 'install', '--omit=dev'], cwd: Builder.Dir.Out }));
+    await Builder.ExecuteStep(Step_Bun_Run({ cmd: ['bun', 'run', 'vsce', 'package'], cwd: Builder.Dir.Out }));
     for await (const path of Async_BunPlatform_Glob_Scan_Generator(Builder.Dir.Out, '*.vsix')) {
-      await Async_BunPlatform_File_Move(NODE_PATH.join(Builder.Dir.Out, path), NODE_PATH.join(this.config.release_dirpath, path), true);
+      await Async_BunPlatform_File_Move(NODE_PATH.join(Builder.Dir.Out, path), NODE_PATH.join(this.config.release_dir, path), true);
     }
   }
 }
 interface Config {
-  release_dirpath: string;
+  release_dir: string;
   /**
-   * Note: Not all extensions need an entrypoint.
+   * Corresponds to `package.json` `main` property.
+   *
+   * Note: Not all extensions need a main script.
    * @default undefined
    */
-  entrypoint?: string;
+  main?: string;
   /**
    * Use this to increment the package.json "version" property once for this
-   * build. Useful when patching an existing extension. For your own extension,
-   * update the actual "version" property of the actual package.json, instead.
+   * build. Useful when continuously patching an existing extension. For your
+   * own extension, update the actual "version" property of the actual
+   * package.json, instead.
    * @default undefined
    */
   increment_version?: Parameters<typeof SEMVER_UTIL.increment>[1];

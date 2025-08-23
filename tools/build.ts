@@ -26,7 +26,7 @@ Builder.SetVerbosity(Builder.VERBOSITY._1_LOG);
 
 // These steps are run during the startup phase only.
 Builder.SetStartUpSteps(
-  Step_Dev_Project_Update_Config({ project_path: '.' }),
+  Step_Dev_Project_Update_Config({ project_dir: '.' }),
   Step_Bun_Run({ cmd: ['bun', 'update', '--latest'], showlogs: false }),
   Step_Bun_Run({ cmd: ['bun', 'install'], showlogs: false }),
   Step_FS_Clean_Directory(Builder.Dir.Out),
@@ -74,7 +74,7 @@ Builder.SetCleanUpSteps(
   // Step_Flatten_OriginalRepo_OutDir({ original_subdir: 'original-repo', merge_list: ['package.json', 'CHANGELOG.md', 'README.md'] }),
 
   Step_Dev_Format({ showlogs: false }),
-  Step_VSCE_Package({ entrypoint: 'extension.module.ts', release_dirpath: 'release' }),
+  Step_VSCE_Package({ main: 'extension.module.ts', release_dir: 'release' }),
   //
 );
 
