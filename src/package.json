@@ -12,7 +12,7 @@
   },
   "license": "LICENSE-APACHE",
   "publisher": "ericchase",
-  "main": "./extension.module.ts",
+  "main": "./extension.module.js",
   "contributes": {
     "commands": [
       {

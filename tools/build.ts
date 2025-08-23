@@ -1,5 +1,4 @@
 import { BunPlatform_Argv_Includes } from '../src/lib/ericchase/BunPlatform_Argv_Includes.js';
-import { NodePlatform_PathObject_Relative_Class } from '../src/lib/ericchase/NodePlatform_PathObject_Relative_Class.js';
 import { Step_Dev_Format } from './core-dev/step/Step_Dev_Format.js';
 import { Step_Dev_Project_Update_Config } from './core-dev/step/Step_Dev_Project_Update_Config.js';
 import { Builder } from './core/Builder.js';
@@ -7,7 +6,6 @@ import { Processor_Set_Writable } from './core/processor/Processor_Set_Writable.
 import { Processor_TypeScript_Generic_Bundler } from './core/processor/Processor_TypeScript_Generic_Bundler.js';
 import { Step_Bun_Run } from './core/step/Step_Bun_Run.js';
 import { Step_FS_Clean_Directory } from './core/step/Step_FS_Clean_Directory.js';
-import { Step_Output_Merge_Files } from './core/step/Step_Output_Merge_Files.js';
 import { Processor_JavaScript_Rollup } from './lib-vscode-extension/processors/Processor_JavaScript_Rollup.js';
 import { Step_VSCE_Package } from './lib-vscode-extension/steps/Step_VSCE_Package.js';
 
@@ -53,19 +51,11 @@ const external = [
 ];
 Builder.SetProcessorModules(
   // Bundle the IIFE scripts and module scripts.
-  Processor_TypeScript_Generic_Bundler({ target: 'node' }, { bundler_mode: 'iife' }),
+  // Processor_TypeScript_Generic_Bundler({ target: 'node' }, { bundler_mode: 'iife' }),
   Processor_TypeScript_Generic_Bundler({ external, target: 'node' }, { bundler_mode: 'module' }),
   Processor_JavaScript_Rollup({ external }),
   // Write non-bundle and non-library files.
   Processor_Set_Writable({ include_patterns: ['**'], value: true }),
-  //
-);
-
-// These steps are run after each processing phase.
-Builder.SetAfterProcessingSteps();
-
-// These steps are run during the cleanup phase only.
-Builder.SetCleanUpSteps(
   /**
    * When continuously patching an existing extension, store its repository
    * files under `src/original-repo`. This let's you merge specific JSON and
@@ -74,7 +64,7 @@ Builder.SetCleanUpSteps(
    * original repo output folder onto the top-level output folder using the
    * `Step_FS_Move_Files` step.
    */
-  // Step_Output_Merge_Files(
+  // Processor_Merge_Files(
   //   {
   //     type: 'json',
   //     merge_files: ['original-repo/package.json', 'package.json'],
@@ -104,22 +94,33 @@ Builder.SetCleanUpSteps(
   //     out_file: 'CHANGELOG.md',
   //   },
   // ),
+  //
+);
+
+// // These steps are run after each processing phase.
+// Builder.SetAfterProcessingSteps(
+//   /**
+//    * When continuously patching an existing extension.
+//    */
+//   Step_FS_Copy_Files({
+//     include_patterns: ['**'],
+//     from_dir: `${Builder.Dir.Out}/original-repo`,
+//     into_dir: Builder.Dir.Out,
+//     overwrite: true,
+//   }),
+// );
+
+// These steps are run during the cleanup phase only.
+Builder.SetCleanUpSteps(
+  /**
+   * When continuously patching an existing extension.
+   */
   // Step_FS_Move_Files({
   //   include_patterns: ['**'],
   //   from_dir: `${Builder.Dir.Out}/original-repo`,
   //   into_dir: Builder.Dir.Out,
   //   overwrite: true,
   // }),
-
-  Step_Output_Merge_Files({
-    type: 'json',
-    merge_files: ['package.json'],
-    out_file: 'package.json',
-    modify: (data: any) => {
-      // make sure the main script is a relative `.js` file in posix form
-      data.main = NodePlatform_PathObject_Relative_Class(data.main).replaceExt('.js').toPosix().join({ dot: true });
-    },
-  }),
   Step_Dev_Format({ showlogs: false }),
   Step_VSCE_Package({ release_dir: 'release' }),
   //
