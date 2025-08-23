@@ -1,6 +1,4 @@
 import { BunPlatform_Argv_Includes } from '../src/lib/ericchase/BunPlatform_Argv_Includes.js';
-import { NODE_PATH } from '../src/lib/ericchase/NodePlatform.js';
-import { Async_NodePlatform_Directory_Delete } from '../src/lib/ericchase/NodePlatform_Directory_Delete.js';
 import { Step_Dev_Format } from './core-dev/step/Step_Dev_Format.js';
 import { Step_Dev_Project_Update_Config } from './core-dev/step/Step_Dev_Project_Update_Config.js';
 import { Builder } from './core/Builder.js';
@@ -13,9 +11,6 @@ import { Step_VSCE_Package } from './lib-vscode-extension/steps/Step_VSCE_Packag
 
 // If needed, add `cache` directory to the logger's file writer.
 // await AddLoggerOutputDirectory('cache');
-
-// Delete server lib folder because it's not useful for VSCode extensions.
-await Async_NodePlatform_Directory_Delete(NODE_PATH.join(Builder.Dir.Lib, 'server'), true);
 
 // Use command line arguments to set developer mode.
 if (BunPlatform_Argv_Includes('--dev')) {
