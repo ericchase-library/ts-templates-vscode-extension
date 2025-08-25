@@ -67,8 +67,8 @@ Builder.SetProcessorModules(
   // Processor_Merge_Files(
   //   {
   //     type: 'json',
-  //     merge_files: ['original-repo/package.json', 'package.json'],
-  //     out_file: 'package.json',
+  //     merge_paths: ['original-repo/package.json', 'package.json'],
+  //     out_path: 'package.json',
   //     modify: (data: any) => {
   //       /**
   //        * Note: This is effectively the only way to delete properties.
@@ -90,8 +90,8 @@ Builder.SetProcessorModules(
   //   },
   //   {
   //     type: 'text',
-  //     merge_files: ['CHANGELOG.md', 'original-repo/CHANGELOG.md'],
-  //     out_file: 'CHANGELOG.md',
+  //     merge_paths: ['CHANGELOG.md', 'original-repo/CHANGELOG.md'],
+  //     out_path: 'CHANGELOG.md',
   //   },
   // ),
   //
