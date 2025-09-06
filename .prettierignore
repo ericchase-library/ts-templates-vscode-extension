@@ -19,7 +19,7 @@ bun.lock
 # /out/
 
 # original repo
-/src/original-repo
+/src/original-repo/
 
 # bundle will likely be extremely large, don't format
 /out/extension.module.js

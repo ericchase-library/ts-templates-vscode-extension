@@ -45,17 +45,21 @@ Builder.SetBeforeProcessingSteps();
 // The processors are run for every file that added them during every
 // processing phase.
 
-const external = [
-  'vscode',
-  //
-];
 Builder.SetProcessorModules(
   // Bundle the IIFE scripts and module scripts.
-  // Processor_TypeScript_Generic_Bundler({ target: 'node' }, { bundler_mode: 'iife' }),
-  Processor_TypeScript_Generic_Bundler({ external, target: 'node' }, { bundler_mode: 'module' }),
-  Processor_JavaScript_Rollup({ external }),
+  Processor_TypeScript_Generic_Bundler({ target: 'node' }, { bundler_mode: 'iife', exclude_patterns: ['lib/server/hot-reload.iife.ts'] }),
+  Processor_TypeScript_Generic_Bundler({ external: ['vscode'], target: 'node' }, { bundler_mode: 'module' }),
+  Processor_JavaScript_Rollup({ external: ['vscode'] }),
   // Write non-bundle and non-library files.
-  Processor_Set_Writable({ include_patterns: ['**'], value: true }),
+  Processor_Set_Writable({
+    include_patterns: [
+      'LICENSE',
+      'README.md',
+      'package.json',
+      //
+    ],
+    value: true,
+  }),
   /**
    * When continuously patching an existing extension, store its repository
    * files under `src/original-repo`. This let's you merge specific JSON and
@@ -97,18 +101,19 @@ Builder.SetProcessorModules(
   //
 );
 
-// // These steps are run after each processing phase.
-// Builder.SetAfterProcessingSteps(
-//   /**
-//    * When continuously patching an existing extension.
-//    */
-//   Step_FS_Copy_Files({
-//     include_patterns: ['**'],
-//     from_dir: `${Builder.Dir.Out}/original-repo`,
-//     into_dir: Builder.Dir.Out,
-//     overwrite: true,
-//   }),
-// );
+// if (Builder.GetMode() === Builder.MODE.BUILD) {
+//   Builder.AddAfterProcessingSteps(
+//     /**
+//      * When continuously patching an existing extension.
+//      */
+//     Step_FS_Copy_Files({
+//       include_patterns: ['**'],
+//       from_dir: `${Builder.Dir.Out}/original-repo`,
+//       into_dir: Builder.Dir.Out,
+//       overwrite: true,
+//     }),
+//   );
+// }
 
 // These steps are run during the cleanup phase only.
 Builder.SetCleanUpSteps(
@@ -121,6 +126,7 @@ Builder.SetCleanUpSteps(
   //   into_dir: Builder.Dir.Out,
   //   overwrite: true,
   // }),
+  // Step_FS_Delete_Directory(`${Builder.Dir.Out}/original-repo`),
   Step_Dev_Format({ showlogs: false }),
   Step_VSCE_Package({ release_dir: 'release' }),
   //
