@@ -1,14 +1,14 @@
 {
   "dependencies": {},
   "devDependencies": {
-    "@types/bun": "1.2.22",
-    "@types/chrome": "0.1.12",
-    "@types/node": "24.5.2",
+    "@types/bun": "1.2.23",
+    "@types/chrome": "0.1.17",
+    "@types/node": "24.6.2",
     "tree-kill": "1.2.2",
     "@types/vscode": "1.104.0",
     "@vscode/test-cli": "0.0.11",
-    "@vscode/vsce": "3.6.1",
-    "rollup": "4.52.0"
+    "@vscode/vsce": "3.6.2",
+    "rollup": "4.52.3"
   },
   "scripts": {
     "build": "bun run tools/build.ts",
